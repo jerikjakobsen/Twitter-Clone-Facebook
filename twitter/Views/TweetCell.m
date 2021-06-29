@@ -14,6 +14,7 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code
+    self.profileImage.layer.cornerRadius = 23;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -31,7 +32,7 @@
     self.retweetCountLabel.text = [NSString stringWithFormat: @"%d", tweet.retweetCount ];
     [self setFavorite: tweet.favorited];
     [self setRetweet: tweet.retweeted];
-    
+    //self.profileImage = nil;
     [self.profileImage setImageWithURL:[NSURL URLWithString: tweet.user.profilePicture] placeholderImage: [UIImage imageNamed:@"moment-icon"] ];
     
     

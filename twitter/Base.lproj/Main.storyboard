@@ -209,6 +209,7 @@
                                 <action selector="onLogout:" destination="Lbl-k5-U4i" id="h4N-bq-WDa"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" image="edit-icon" id="4E5-3w-kM1"/>
                     </navigationItem>
                     <connections>
                         <outlet property="tweetsTableView" destination="X8G-6q-zEo" id="H0N-eG-coc"/>
@@ -240,6 +241,7 @@
     </scenes>
     <resources>
         <image name="TwitterLogoBlue" width="200" height="200"/>
+        <image name="edit-icon" width="30" height="27"/>
         <image name="favor-icon" width="30" height="30"/>
         <image name="favor-icon-red" width="30" height="30"/>
         <image name="reply-icon" width="30" height="30"/>
