@@ -7,14 +7,15 @@
 //
 
 #import "TimelineViewController.h"
-
+#import "ComposeTweetViewController.h"
 #import "APIManager.h"
 #import "AppDelegate.h"
 #import "LoginViewController.h"
 #import "Tweet.h"
 #import "TweetCell.h"
+#import "ComposeTweetViewController.h"
 
-@interface TimelineViewController () <UITableViewDelegate, UITableViewDataSource>
+@interface TimelineViewController () <ComposeTweetViewControllerDelegate, UITableViewDelegate, UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tweetsTableView;
 @property (nonatomic, strong) NSMutableArray* arrayOfTweets;
 @end
@@ -25,6 +26,7 @@
     [super viewDidLoad];
     self.tweetsTableView.delegate = self;
     self.tweetsTableView.dataSource = self;
+    
     // Get timeline
     [self loadTweets];
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
@@ -35,7 +37,6 @@
 - (void) loadTweets {
     [[APIManager shared] getHomeTimelineWithCompletion:^(NSArray *tweets, NSError *error) {
         if (tweets) {
-            NSLog(@"😎😎😎 Successfully loaded home timeline");
             for (Tweet *tweet in tweets) {
                 NSLog(@"%@", tweet.text );
             }
@@ -79,15 +80,16 @@
 }
 
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    if ([segue.identifier isEqualToString: @"toComposeTweet"] ) {
+
+        UINavigationController *navigationController = [segue destinationViewController];
+        ComposeTweetViewController *CTVC = (ComposeTweetViewController *) navigationController.topViewController;
+        CTVC.delegate = self;
+
+    }
+    
 }
-*/
 
 
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
@@ -98,6 +100,11 @@
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.arrayOfTweets.count;
+}
+
+- (void)didTweet:(nonnull Tweet *)tweet {
+    [self.arrayOfTweets insertObject:tweet atIndex:0];
+    [self.tweetsTableView reloadData];
 }
 
 @end

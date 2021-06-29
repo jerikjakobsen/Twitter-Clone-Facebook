@@ -8,6 +8,7 @@
 
 #import "TweetCell.h"
 #import "UIImageView+AFNetworking.h"
+#import "APIManager.h"
 
 @implementation TweetCell
 
@@ -24,6 +25,7 @@
 }
 
 - (void) setWithTweet:(Tweet *)tweet {
+    self.tweet = tweet;
     self.createdAtLabel.text = tweet.createdAtString;
     self.favoriteCountLabel.text = [NSString stringWithFormat: @"%d", tweet.favoriteCount ];
     self.nameLabel.text = tweet.user.name;
@@ -58,10 +60,74 @@
 
 - (IBAction)onRetweet:(id)sender {
     //Send API Request
+    self.tweet.retweeted = !self.tweet.retweeted;
+    if (self.tweet.retweeted) self.tweet.retweetCount += 1;
+    else self.tweet.retweetCount -= 1;
+    [self setRetweet: self.tweet.retweeted];
+    self.retweetCountLabel.text = [NSString stringWithFormat: @"%d", self.tweet.retweetCount ];
+    if (self.tweet.retweeted) [[APIManager shared] retweet:self.tweet completion: ^(Tweet *tweet, NSError *error) {
+        if (error) {
+            NSLog(@"error retweeting tweet: %@", error.localizedDescription);
+            self.tweet.retweeted = !self.tweet.retweeted;
+            self.tweet.retweetCount -= 1;
+            [self setRetweet: self.tweet.retweeted];
+            self.retweetCountLabel.text = [NSString stringWithFormat: @"%d", self.tweet.retweetCount ];
+
+        } else {
+            NSLog(@"Retweeted Tweet successfully");
+
+        }
+    }];
+    else [[APIManager shared] unretweet:self.tweet completion: ^(Tweet *tweet, NSError *error) {
+        if (error) {
+            NSLog(@"error unretweeting tweet: %@", error.localizedDescription);
+            self.tweet.retweeted = !self.tweet.retweeted;
+            self.tweet.retweetCount += 1;
+            [self setRetweet: self.tweet.retweeted];
+            self.retweetCountLabel.text = [NSString stringWithFormat: @"%d", self.tweet.retweetCount ];
+
+        } else {
+            NSLog(@"Unretweeted Tweet successfully");
+
+        }
+    }];
+    
 }
 
 - (IBAction)onFavorite:(id)sender {
     //Send API Request
+    NSLog(@"%d", self.tweet.favoriteCount);
+    self.tweet.favorited = !self.tweet.favorited;
+    if (self.tweet.favorited) self.tweet.favoriteCount += 1;
+    else self.tweet.favoriteCount -= 1;
+    [self setFavorite: self.tweet.favorited];
+    self.favoriteCountLabel.text = [NSString stringWithFormat: @"%d", self.tweet.favoriteCount];
+    if (self.tweet.favorited) [[APIManager shared] favorite:self.tweet completion: ^(Tweet *tweet, NSError *error) {
+        if (error) {
+            NSLog(@"error favoriting tweet: %@", error.localizedDescription);
+            self.tweet.favorited = !self.tweet.favorited;
+            self.tweet.favoriteCount -= 1;
+            [self setFavorite: self.tweet.favorited];
+            self.favoriteCountLabel.text = [NSString stringWithFormat: @"%d", self.tweet.favoriteCount];
 
+        } else {
+            NSLog(@"Favorited Tweet successfully");
+
+        }
+    }];
+    else [[APIManager shared] unfavorite:self.tweet completion: ^(Tweet *tweet, NSError *error) {
+        if (error) {
+            NSLog(@"error unfavoriting tweet: %@", error.localizedDescription);
+            self.tweet.favorited = !self.tweet.favorited;
+            self.tweet.favoriteCount += 1;
+            [self setFavorite: self.tweet.favorited];
+            self.favoriteCountLabel.text = [NSString stringWithFormat: @"%d", self.tweet.favoriteCount];
+
+        } else {
+            NSLog(@"unFavorited Tweet successfully");
+
+        }
+    }];
+    
 }
 @end
