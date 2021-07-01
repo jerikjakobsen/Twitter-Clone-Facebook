@@ -15,10 +15,9 @@
 #import "TweetCell.h"
 #import "ComposeTweetViewController.h"
 #import "TweetDetailsViewController.h"
+#import "TweetDetailCell.h"
 
-@interface TimelineViewController () <ComposeTweetViewControllerDelegate, UITableViewDelegate, UITableViewDataSource>
-@property (weak, nonatomic) IBOutlet UITableView *tweetsTableView;
-@property (nonatomic, strong) NSMutableArray* arrayOfTweets;
+@interface TimelineViewController () <ComposeTweetViewControllerDelegate, UITableViewDelegate, UITableViewDataSource, TweetDetailCellDelegate>
 @property int tweetCount;
 @end
 
@@ -71,7 +70,6 @@
  completion:^(NSArray *tweets, NSError *error) {
         if (tweets) {
             NSLog(@"😎😎😎 Successfully loaded home timeline");
-            self.tweetCount += 20;
             self.arrayOfTweets = [[NSMutableArray alloc] initWithArray:tweets];
             [self.tweetsTableView reloadData];
         } else {
@@ -111,8 +109,10 @@
     } else if ([segue.identifier isEqualToString: @"toTweetDetail"]) {
         TweetDetailsViewController *TDVC = (TweetDetailsViewController *) segue.destinationViewController;
         NSIndexPath *indexPath = [self.tweetsTableView indexPathForCell: (TweetCell *) sender];
+        TDVC.tweetRow = indexPath.row;
         Tweet *tweet = self.arrayOfTweets[indexPath.row];
         TDVC.tweet = tweet;
+        TDVC.TVC = self;
     } else {
         ComposeTweetViewController *CTVC = (ComposeTweetViewController *) navigationController.topViewController;
         CTVC.tweetType = @"newTweet";
@@ -140,5 +140,14 @@
     if (indexPath.row + 1 == self.arrayOfTweets.count) {
         [self loadMoreTweets];
     }
+}
+
+-(void) retweet:(NSInteger *)tweetRow {
+    [self.tweetsTableView reloadData];
+}
+
+-(void) favorite:(NSInteger *)tweetRow {
+    [self.tweetsTableView reloadData];
+    
 }
 @end

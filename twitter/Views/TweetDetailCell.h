@@ -10,6 +10,13 @@
 #import "Tweet.h"
 
 NS_ASSUME_NONNULL_BEGIN
+@protocol TweetDetailCellDelegate
+
+- (void) retweet: (NSInteger *) tweetRow;
+- (void) favorite: (NSInteger *) tweetRow;
+
+@end
+
 
 @interface TweetDetailCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *profilePic;
@@ -20,7 +27,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UILabel *retweetCount;
 @property (weak, nonatomic) IBOutlet UILabel *likeCount;
 @property (strong, nonatomic) Tweet *tweet;
-
+@property (weak, nonatomic) IBOutlet UIButton *favoriteButton;
+@property (nonatomic, weak) id<TweetDetailCellDelegate> delegate;
+@property NSInteger *tweetRow;
+@property (weak, nonatomic) IBOutlet UIButton *retweetButton;
 - (void) setWithTweet:(Tweet *)tweet;
 @end
 

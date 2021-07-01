@@ -12,6 +12,7 @@
 #import "TweetDetailCell.h"
 #import "Tweet.h"
 #import "User.h"
+#import "TimelineViewController.h"
 
 @interface TweetDetailsViewController () <UITableViewDelegate, UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tweetsTableView;
@@ -35,21 +36,13 @@
     }];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
 
     if (indexPath.section == 0) {
         TweetDetailCell *cell = [self.tweetsTableView dequeueReusableCellWithIdentifier:@"TweetDetailCell"];
         [cell setWithTweet:self.tweet];
+        cell.delegate = self.TVC;
+        cell.tweetRow = self.tweetRow;
         return cell;
     } else {
         TweetReplyCell *cell = [self.tweetsTableView dequeueReusableCellWithIdentifier: @"TweetReplyCell"];

@@ -95,7 +95,6 @@
 
 - (IBAction)onFavorite:(id)sender {
     //Send API Request
-    NSLog(@"%d", self.tweet.favoriteCount);
     self.tweet.favorited = !self.tweet.favorited;
     if (self.tweet.favorited) self.tweet.favoriteCount += 1;
     else self.tweet.favoriteCount -= 1;
