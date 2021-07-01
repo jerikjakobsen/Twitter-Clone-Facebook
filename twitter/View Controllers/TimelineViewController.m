@@ -37,10 +37,15 @@
 - (void) loadTweets {
     [[APIManager shared] getHomeTimelineWithCompletion:^(NSArray *tweets, NSError *error) {
         if (tweets) {
-            for (Tweet *tweet in tweets) {
-                NSLog(@"%@", tweet.text );
-            }
+
             self.arrayOfTweets = [[NSMutableArray alloc] initWithArray:tweets];
+            [[APIManager shared] getReplies: self.arrayOfTweets[0] completion:^(NSArray *replyArray, NSError *error) {
+                            if (error != nil) {
+                                NSLog(@"%@",error.localizedDescription);
+                            } else {
+                                NSLog(@"%@", replyArray);
+                            }
+            }];
             [self.tweetsTableView reloadData];
         } else {
             NSLog(@"😫😫😫 Error getting home timeline: %@", error.localizedDescription);
@@ -52,9 +57,7 @@
     [[APIManager shared] getHomeTimelineWithCompletion:^(NSArray *tweets, NSError *error) {
         if (tweets) {
             NSLog(@"😎😎😎 Successfully loaded home timeline");
-            for (Tweet *tweet in tweets) {
-                NSLog(@"%@", tweet.text );
-            }
+
             self.arrayOfTweets = [[NSMutableArray alloc] initWithArray:tweets];
             [self.tweetsTableView reloadData];
             [refreshControl endRefreshing];

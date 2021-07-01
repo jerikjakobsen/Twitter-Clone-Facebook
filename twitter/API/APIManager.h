@@ -21,4 +21,6 @@
 - (void) unretweet: (Tweet *) tweet completion: (void (^)(Tweet *, NSError *)) completion;
 - (void) postStatusWithText: (NSString *) text completion: (void (^) (Tweet *, NSError *)) completion;
 
+- (void) getReplies: (Tweet *) tweet completion: (void (^) (NSArray *, NSError *)) completion;
+
 @end

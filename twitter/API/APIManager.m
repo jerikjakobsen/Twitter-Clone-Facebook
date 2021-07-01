@@ -52,12 +52,13 @@ static NSString * const baseURLString = @"https://api.twitter.com";
 }
 
 - (void)getHomeTimelineWithCompletion:(void(^)(NSArray *tweets, NSError *error))completion {
-    
+    NSDictionary *parameters = @{@"tweet.fields": @"conversation_id"};
     [self GET:@"1.1/statuses/home_timeline.json"
-       parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, NSArray *  _Nullable tweetDictionaries) {
+       parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, NSArray *  _Nullable tweetDictionaries) {
            // Success
            NSMutableArray *tweets  = [Tweet tweetsWithArray:tweetDictionaries];
-        NSLog(@"%@", tweetDictionaries[0]);
+
+        //NSLog(@"%@", tweetDictionaries[0]);
            completion(tweets, nil);
        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
            // There was a problem
@@ -79,7 +80,6 @@ static NSString * const baseURLString = @"https://api.twitter.com";
 
 - (void) retweet: (Tweet *) tweet completion: (void (^)(Tweet *, NSError *)) completion {
     NSString *urlString = [NSString stringWithFormat:@"1.1/statuses/retweet/%@.json", tweet.idStr];
-    NSLog(urlString);
     NSDictionary *parameters = @{@"id": tweet.idStr};
 
     [self POST: urlString parameters: parameters progress:nil success: ^(NSURLSessionDataTask * _Nonnull task, NSDictionary * _Nullable tweetDictionary) {
@@ -120,6 +120,57 @@ static NSString * const baseURLString = @"https://api.twitter.com";
     [self POST:urlString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable tweetDictionary) {
             Tweet *tweet = [[Tweet alloc] initWithDictionary: tweetDictionary];
             completion(tweet, nil);
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            completion(nil, error);
+        }];
+}
+
+
+- (void) getTweetConversationID:(Tweet *)tweet completion:(void (^)(NSString *, NSError *))completion {
+    NSString *urlString = @"2/tweets";
+    NSDictionary *parameters = @{@"ids": @"1410264579024822279", @"tweet.fields": @"conversation_id"};
+    [self GET:urlString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable tweetDictionary) {
+            completion(tweetDictionary[@"data"][0][@"conversation_id"], nil);
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            completion(nil, error);
+        }];
+    
+}
+
+- (void) getReplies:(Tweet *)tweet completion:(void (^)(NSArray *, NSError *))completion {
+    [self getTweetConversationID:tweet completion:^(NSString *conversationID, NSError *error) {
+        if (error != nil) {
+            NSLog(@"Failed at getTweetConversationID %@", error.localizedDescription);
+            completion(nil, error);
+        } else {
+            [self getRepliesWithID:conversationID completion:^(NSDictionary *dataDict, NSError *error) {
+                if (error != nil) {
+                    NSLog(@"%@",error.localizedDescription);
+                    completion(nil, error);
+                } else {
+                    NSDictionary *users = [[NSDictionary alloc] init];
+                    for (NSDictionary *user in dataDict[@"includes"][@"users"]) {
+                        [users setValue: user forKey: user[@"id"]];
+                    }
+                    for (NSDictionary *reply in dataDict[@"data"]) {
+                        NSDictionary *userInfo = reply[@"author_id"];
+                        
+                    }
+                    completion(dataDict[@"data"], error);
+                }
+            }];
+        }
+    }];
+    
+}
+
+- (void) getRepliesWithID: (NSString *) tweetID completion:(void (^)(NSDictionary *dataDict, NSError *))completion {
+    NSString *urlString = @"2/tweets/search/recent";
+    NSDictionary *parameters = @{@"query":[NSString stringWithFormat:@"conversation_id:%@", tweetID], @"tweet.fields": @"in_reply_to_user_id,author_id,created_at,conversation_id", @"expansions":@"author_id", @"user.fields": @"name,username,created_at,profile_image_url"};
+    NSLog(@"%@", parameters);
+    [self GET:urlString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable tweetDictionary) {
+        NSLog(@"%@", tweetDictionary);
+        completion(tweetDictionary, nil);
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             completion(nil, error);
         }];
