@@ -24,9 +24,9 @@
 - (instancetype) initWithReplyDictionary:(NSDictionary *)dictionary {
     self = [super init];
     if (self) {
-        self.name = dictionary[@"name"];
-        self.screenName = dictionary[@"username"];
-        self.profilePicture = dictionary[@"profile_image_url"];
+        self.name = dictionary[@"user_info"][@"name"];
+        self.screenName = dictionary[@"user_info"][@"username"];
+        self.profilePicture = dictionary[@"user_info"][@"profile_image_url"];
         self.profileBackgroundPicture = @"not available";
         
     }

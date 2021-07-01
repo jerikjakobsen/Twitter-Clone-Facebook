@@ -7,6 +7,7 @@
 //
 
 #import "TweetReplyCell.h"
+#import "UIImageView+AFNetworking.h"
 
 @implementation TweetReplyCell
 
@@ -22,7 +23,15 @@
 }
 
 - (void) setWithTweet:(Tweet *)tweet {
-    [super setWithTweet: tweet];
+    self.tweet = tweet;
+    self.createdAtLabel.text = tweet.createdAtString;
+    self.favoriteCountLabel.text = [NSString stringWithFormat: @"%d", tweet.favoriteCount ];
+    self.nameLabel.text = tweet.user.name;
+    self.screenNameLabel.text =  [NSString stringWithFormat:@"@%@", tweet.user.screenName ];
+    self.tweetTextLabel.text = tweet.text;
+    self.retweetCountLabel.text = [NSString stringWithFormat: @"%d", tweet.retweetCount ];
+    [self.profileImage setImageWithURL:[NSURL URLWithString: tweet.user.profilePicture] placeholderImage: [UIImage imageNamed:@"moment-icon"] ];
+    
     
     //self.replyToLabel.text = NSString stringWithFormat:@"@%@"
 }

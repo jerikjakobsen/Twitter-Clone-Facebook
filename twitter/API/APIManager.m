@@ -178,7 +178,7 @@ static NSString * const baseURLString = @"https://api.twitter.com";
 //            }];
 //        }
 //    }];
-    [self getRepliesWithID: @"1410264579024822279" completion:^(NSDictionary *dataDict, NSError *error) {
+    [self getRepliesWithID: tweet.idStr completion:^(NSDictionary *dataDict, NSError *error) {
                     if (error != nil) {
                         completion(nil, error);
                     } else {

@@ -14,6 +14,7 @@
 #import "Tweet.h"
 #import "TweetCell.h"
 #import "ComposeTweetViewController.h"
+#import "TweetDetailsViewController.h"
 
 @interface TimelineViewController () <ComposeTweetViewControllerDelegate, UITableViewDelegate, UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tweetsTableView;
@@ -85,15 +86,24 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     UINavigationController *navigationController = [segue destinationViewController];
-    ComposeTweetViewController *CTVC = (ComposeTweetViewController *) navigationController.topViewController;
-    CTVC.delegate = self;
+    
     if ([segue.identifier isEqualToString: @"toReply"]) {
+        ComposeTweetViewController *CTVC = (ComposeTweetViewController *) navigationController.topViewController;
+        CTVC.delegate = self;
         NSIndexPath *indexPath = [self.tweetsTableView indexPathForCell: [[sender superview] superview]];
         Tweet *tweet = self.arrayOfTweets[indexPath.row];
         CTVC.replyID = tweet.idStr;
         CTVC.replyUsername = tweet.user.screenName;
         CTVC.tweetType = @"reply";
         
+    } else if ([segue.identifier isEqualToString: @"toTweetDetail"]) {
+        TweetDetailsViewController *TDVC = (TweetDetailsViewController *) segue.destinationViewController;
+        NSIndexPath *indexPath = [self.tweetsTableView indexPathForCell: (TweetCell *) sender];
+        Tweet *tweet = self.arrayOfTweets[indexPath.row];
+        TDVC.tweet = tweet;
+    } else {
+        ComposeTweetViewController *CTVC = (ComposeTweetViewController *) navigationController.topViewController;
+        CTVC.delegate = self;
     }
     
 }

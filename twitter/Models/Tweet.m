@@ -18,7 +18,6 @@
         NSDictionary *originalTweet = dictionary[@"retweeted_status"];
         if (originalTweet != nil) {
             NSDictionary *userDictionary = dictionary[@"user"];
-            self.retweetedByUser = [[User alloc] initWithDictionary: userDictionary];
             
             dictionary = originalTweet;
         }
@@ -53,18 +52,16 @@
     if (self) {
         NSDictionary *reply = dictionary[@"reply"];
         if (reply != nil) {
-            NSDictionary *userDictionary = dictionary[@"user_info"];
-            self.retweetedByUser = [[User alloc] initWithDictionary: userDictionary];
+            NSDictionary *userDictionary = dictionary[@"user"];
+            self.user = [[User alloc] initWithReplyDictionary:userDictionary];
         }
         
         self.idStr = reply[@"author_id"];
-        self.text = dictionary[@"text"];
+        self.text = reply[@"text"];
         self.favoriteCount = [reply[@"public_metrics"][@"like_count"] intValue];
         self.favorited = FALSE;
         self.retweetCount = [reply[@"public_metrics"][@"retweet_count"] intValue];
         self.retweeted = FALSE;
-        NSDictionary *user = dictionary[@"user"];
-        self.user = [[User alloc] initWithDictionary:user];
         
         // Setting the date created property
         

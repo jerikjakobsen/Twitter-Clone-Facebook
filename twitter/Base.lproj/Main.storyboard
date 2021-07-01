@@ -304,7 +304,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="GOt-kM-zfm">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TweetDetailCell" id="GOt-kM-zfm" customClass="TweetDetailCell">
                                         <rect key="frame" x="0.0" y="24.5" width="414" height="170"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="GOt-kM-zfm" id="9d2-Mz-OUL">
@@ -394,6 +394,15 @@
                                                 <constraint firstItem="1DK-Aw-gUJ" firstAttribute="top" secondItem="Hna-gR-Kab" secondAttribute="top" constant="5" id="vPf-Uf-Dvz"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="createdAt" destination="gpw-ZY-1m5" id="rW0-bh-52A"/>
+                                            <outlet property="likeCount" destination="KoK-MU-VDh" id="jkm-by-T8m"/>
+                                            <outlet property="name" destination="1DK-Aw-gUJ" id="J0U-zK-M3p"/>
+                                            <outlet property="profilePic" destination="Hna-gR-Kab" id="h3j-Mw-TPo"/>
+                                            <outlet property="retweetCount" destination="aGz-bk-YvG" id="pE4-EO-0D5"/>
+                                            <outlet property="tweetText" destination="Nts-Wd-AjK" id="BQE-p0-7v5"/>
+                                            <outlet property="username" destination="Qvb-05-kZj" id="iQ0-PI-thv"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TweetReplyCell" id="HKI-Y3-ido" customClass="TweetReplyCell">
                                         <rect key="frame" x="0.0" y="194.5" width="414" height="174.5"/>
@@ -512,6 +521,7 @@
                                             <outlet property="favoriteCountLabel" destination="FNr-JQ-lM1" id="UoS-mY-Bhb"/>
                                             <outlet property="nameLabel" destination="oOI-ww-dOE" id="PiU-bj-LJ7"/>
                                             <outlet property="profileImage" destination="80e-Zr-IdS" id="186-h5-E65"/>
+                                            <outlet property="replyTo" destination="l2U-H5-1c7" id="UUx-wh-NqL"/>
                                             <outlet property="replyToLabel" destination="l2U-H5-1c7" id="s64-cX-9O3"/>
                                             <outlet property="retweetCountLabel" destination="txg-1d-qtH" id="6Da-wo-3BL"/>
                                             <outlet property="screenNameLabel" destination="r9z-De-5y2" id="lmL-8m-sf4"/>
