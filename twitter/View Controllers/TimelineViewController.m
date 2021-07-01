@@ -19,6 +19,7 @@
 @interface TimelineViewController () <ComposeTweetViewControllerDelegate, UITableViewDelegate, UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tweetsTableView;
 @property (nonatomic, strong) NSMutableArray* arrayOfTweets;
+@property int tweetCount;
 @end
 
 @implementation TimelineViewController
@@ -27,6 +28,7 @@
     [super viewDidLoad];
     self.tweetsTableView.delegate = self;
     self.tweetsTableView.dataSource = self;
+    self.tweetCount = 20;
     
     // Get timeline
     [self loadTweets];
@@ -36,20 +38,15 @@
 }
 
 - (void) loadTweets {
+    
     [[APIManager shared] getHomeTimelineWithCompletion:^(NSArray *tweets, NSError *error) {
         if (tweets) {
 
             self.arrayOfTweets = [[NSMutableArray alloc] initWithArray:tweets];
-            [[APIManager shared] getReplies: self.arrayOfTweets[0] completion:^(NSArray *replyArray, NSError *error) {
-                            if (error != nil) {
-                                NSLog(@"%@",error.localizedDescription);
-                            } else {
-                                //NSLog(@"%@", replyArray);
-                            }
-            }];
+            
             [self.tweetsTableView reloadData];
         } else {
-            NSLog(@"😫😫😫 Error getting home timeline: %@", error.localizedDescription);
+            NSLog(@"😫😫😫 load tweets Error getting home timeline: %@", error.localizedDescription);
         }
     }];
 }
@@ -64,6 +61,21 @@
             [refreshControl endRefreshing];
         } else {
             NSLog(@"😫😫😫 Error getting home timeline: %@", error.localizedDescription);
+        }
+    }];
+}
+
+- (void) loadMoreTweets {
+    self.tweetCount += 20;
+    [[APIManager shared] getHomeTimelineWithCompletion: @(self.tweetCount)
+ completion:^(NSArray *tweets, NSError *error) {
+        if (tweets) {
+            NSLog(@"😎😎😎 Successfully loaded home timeline");
+            self.tweetCount += 20;
+            self.arrayOfTweets = [[NSMutableArray alloc] initWithArray:tweets];
+            [self.tweetsTableView reloadData];
+        } else {
+            NSLog(@"😫😫😫 loadmore tweets Error getting home timeline: %@", error.localizedDescription);
         }
     }];
 }
@@ -103,6 +115,7 @@
         TDVC.tweet = tweet;
     } else {
         ComposeTweetViewController *CTVC = (ComposeTweetViewController *) navigationController.topViewController;
+        CTVC.tweetType = @"newTweet";
         CTVC.delegate = self;
     }
     
@@ -123,5 +136,9 @@
     [self.arrayOfTweets insertObject:tweet atIndex:0];
     [self.tweetsTableView reloadData];
 }
-
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row + 1 == self.arrayOfTweets.count) {
+        [self loadMoreTweets];
+    }
+}
 @end

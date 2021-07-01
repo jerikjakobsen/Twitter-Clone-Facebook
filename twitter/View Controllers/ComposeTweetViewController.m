@@ -61,6 +61,9 @@
     else [self.tweetTextView setTintColor: UIColor.blackColor];
     
 }
+
+
+
 - (IBAction)didTapTweet:(id)sender {
     if (self.tweetTextView.text.length == 0) {
         [UIView animateWithDuration: 2 animations:^{
@@ -68,14 +71,14 @@
         }];
     } else {
         if ([self.tweetType isEqualToString: @"newTweet"]) {
-        [[APIManager shared] postStatusWithText: self.tweetTextView.text completion:^(Tweet *tweet, NSError *error) {
-                    if (error) {
-                        NSLog(@"%@", error.localizedDescription);
-                    } else {
-                        [self.delegate didTweet:tweet];
-                        [self dismissViewControllerAnimated:true completion:nil];
-                    }
-        }];
+            [[APIManager shared] postStatusWithText: self.tweetTextView.text completion:^(Tweet *tweet, NSError *error) {
+                        if (error) {
+                            NSLog(@"%@", error.localizedDescription);
+                        } else {
+                            [self.delegate didTweet:tweet];
+                            [self dismissViewControllerAnimated:true completion:nil];
+                        }
+            }];
         } else if ([self.tweetType isEqualToString: @"reply"]) {
             [[APIManager shared] postReplyWithText: self.tweetTextView.text replyToUsername: self.replyUsername replyID: self.replyID completion:^(Tweet *tweet, NSError *error) {
                             if (error != nil) {
