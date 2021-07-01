@@ -52,8 +52,9 @@ static NSString * const baseURLString = @"https://api.twitter.com";
 }
 
 - (void)getHomeTimelineWithCompletion:(void(^)(NSArray *tweets, NSError *error))completion {
+    NSDictionary *params = @{@"tweet_mode":@"extended"};
     [self GET:@"1.1/statuses/home_timeline.json"
-       parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, NSArray *  _Nullable tweetDictionaries) {
+       parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, NSArray *  _Nullable tweetDictionaries) {
            // Success
            NSMutableArray *tweets  = [Tweet tweetsWithArray:tweetDictionaries];
         NSLog(@"%@", tweetDictionaries);
@@ -136,48 +137,7 @@ static NSString * const baseURLString = @"https://api.twitter.com";
         }];
 }
 
-//
-//- (void) getTweetConversationID:(Tweet *)tweet completion:(void (^)(NSString *, NSError *))completion {
-//    NSString *urlString = @"2/tweets";
-//    NSDictionary *parameters = @{@"ids": @"1410264579024822279", @"tweet.fields": @"conversation_id"};
-//    [self GET:urlString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable tweetDictionary) {
-//            completion(tweetDictionary[@"data"][0][@"conversation_id"], nil);
-//        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-//            completion(nil, error);
-//        }];
-//
-//}
-
 - (void) getReplies:(Tweet *)tweet completion:(void (^)(NSArray *, NSError *))completion {
-//    [self getTweetConversationID:tweet completion:^(NSString *conversationID, NSError *error) {
-//        if (error != nil) {
-//            NSLog(@"Failed at getTweetConversationID %@", error.localizedDescription);
-//            completion(nil, error);
-//        } else {
-//            [self getRepliesWithID:conversationID completion:^(NSDictionary *dataDict, NSError *error) {
-//                if (error != nil) {
-//                    completion(nil, error);
-//                } else {
-//                    NSMutableDictionary *users = [[NSMutableDictionary alloc] init];
-//                    NSMutableArray *replies = [[NSMutableArray alloc] init];
-//                    for (NSDictionary *user in dataDict[@"includes"][@"users"]) {
-//                        [users setObject: [[NSMutableDictionary alloc] init] forKey: user[@"id"]];
-//                        [[users objectForKey: user[@"id"]] setObject:user forKey: @"user_info"];
-//                    }
-//
-//
-//                    for (NSDictionary *reply in dataDict[@"data"]) {
-//                        NSMutableDictionary *replyWithUser = [[NSMutableDictionary alloc] init];
-//                        [replyWithUser setObject:reply forKey:@"reply"];
-//                        [replyWithUser setObject: users[reply[@"author_id"]] forKey:@"user"];
-//                        [replies addObject:replyWithUser];
-//                    }
-//                        completion(replies, nil);
-//                }
-//
-//            }];
-//        }
-//    }];
     [self getRepliesWithID: tweet.idStr completion:^(NSDictionary *dataDict, NSError *error) {
                     if (error != nil) {
                         completion(nil, error);
