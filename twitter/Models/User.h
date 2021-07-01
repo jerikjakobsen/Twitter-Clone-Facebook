@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *profilePicture;
 @property (nonatomic, strong) NSString *profileBackgroundPicture;
 - (instancetype) initWithDictionary: (NSDictionary *) dictionary;
+- (instancetype) initWithReplyDictionary:(NSDictionary *)dictionary;
 @end
 
 NS_ASSUME_NONNULL_END

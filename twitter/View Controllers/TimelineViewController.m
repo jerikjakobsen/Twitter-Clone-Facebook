@@ -43,7 +43,7 @@
                             if (error != nil) {
                                 NSLog(@"%@",error.localizedDescription);
                             } else {
-                                NSLog(@"%@", replyArray);
+                                //NSLog(@"%@", replyArray);
                             }
             }];
             [self.tweetsTableView reloadData];
@@ -84,12 +84,16 @@
 
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString: @"toComposeTweet"] ) {
-
-        UINavigationController *navigationController = [segue destinationViewController];
-        ComposeTweetViewController *CTVC = (ComposeTweetViewController *) navigationController.topViewController;
-        CTVC.delegate = self;
-
+    UINavigationController *navigationController = [segue destinationViewController];
+    ComposeTweetViewController *CTVC = (ComposeTweetViewController *) navigationController.topViewController;
+    CTVC.delegate = self;
+    if ([segue.identifier isEqualToString: @"toReply"]) {
+        NSIndexPath *indexPath = [self.tweetsTableView indexPathForCell: [[sender superview] superview]];
+        Tweet *tweet = self.arrayOfTweets[indexPath.row];
+        CTVC.replyID = tweet.idStr;
+        CTVC.replyUsername = tweet.user.screenName;
+        CTVC.tweetType = @"reply";
+        
     }
     
 }

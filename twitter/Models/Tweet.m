@@ -47,6 +47,41 @@
     return self;
 }
 
+- (instancetype) initWithReplyDictionary: (NSDictionary *) dictionary {
+    self = [super init];
+    
+    if (self) {
+        NSDictionary *reply = dictionary[@"reply"];
+        if (reply != nil) {
+            NSDictionary *userDictionary = dictionary[@"user_info"];
+            self.retweetedByUser = [[User alloc] initWithDictionary: userDictionary];
+        }
+        
+        self.idStr = reply[@"author_id"];
+        self.text = dictionary[@"text"];
+        self.favoriteCount = [reply[@"public_metrics"][@"like_count"] intValue];
+        self.favorited = FALSE;
+        self.retweetCount = [reply[@"public_metrics"][@"retweet_count"] intValue];
+        self.retweeted = FALSE;
+        NSDictionary *user = dictionary[@"user"];
+        self.user = [[User alloc] initWithDictionary:user];
+        
+        // Setting the date created property
+        
+        NSString *createdAtOriginalString = reply[@"created_at"];
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        formatter.dateFormat = @"yyyy-MM-dd";
+        NSDate *date = [formatter dateFromString:createdAtOriginalString];
+        
+        
+        self.createdAtString = date.shortTimeAgoSinceNow;
+        
+        
+    }
+    return self;
+}
+
+
 + (NSMutableArray *) tweetsWithArray: (NSArray *) dictionaries {
     NSMutableArray *tweets = [NSMutableArray array];
     for (NSDictionary *dictionary in dictionaries) {

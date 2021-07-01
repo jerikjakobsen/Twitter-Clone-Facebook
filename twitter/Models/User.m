@@ -20,4 +20,16 @@
     }
     return self;
 }
+
+- (instancetype) initWithReplyDictionary:(NSDictionary *)dictionary {
+    self = [super init];
+    if (self) {
+        self.name = dictionary[@"name"];
+        self.screenName = dictionary[@"username"];
+        self.profilePicture = dictionary[@"profile_image_url"];
+        self.profileBackgroundPicture = @"not available";
+        
+    }
+    return self;
+}
 @end

@@ -12,14 +12,16 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol ComposeTweetViewControllerDelegate
-
 - (void) didTweet: (Tweet *) tweet;
 
 @end
 
 @interface ComposeTweetViewController : UIViewController
-@property (strong, nonatomic) UIImageView *profilePic;
+@property (weak, nonatomic) IBOutlet UIImageView *profilePic;
 @property (nonatomic, weak) id<ComposeTweetViewControllerDelegate> delegate;
+@property (nonatomic, weak) NSString *tweetType;
+@property (nonatomic, weak) NSString *replyUsername;
+@property (nonatomic, weak) NSString *replyID;
 
 @end
 

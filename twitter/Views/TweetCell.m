@@ -52,11 +52,10 @@
     if (retweeted) self.retweetCountLabel.textColor = [[UIColor alloc] initWithRed:95.0/255.0 green:204.0/255.0 blue:140.0/255.0 alpha:1];
     else self.retweetCountLabel.textColor = [[UIColor alloc] initWithRed:172.0/255.0 green:184.0/255.0 blue:193.0/255.0 alpha:1];
 }
-
 - (IBAction)onReply:(id)sender {
-    //Send API Request
-
+    NSLog(@"in the cell");
 }
+
 
 - (IBAction)onRetweet:(id)sender {
     //Send API Request

@@ -52,13 +52,11 @@ static NSString * const baseURLString = @"https://api.twitter.com";
 }
 
 - (void)getHomeTimelineWithCompletion:(void(^)(NSArray *tweets, NSError *error))completion {
-    NSDictionary *parameters = @{@"tweet.fields": @"conversation_id"};
     [self GET:@"1.1/statuses/home_timeline.json"
-       parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, NSArray *  _Nullable tweetDictionaries) {
+       parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, NSArray *  _Nullable tweetDictionaries) {
            // Success
            NSMutableArray *tweets  = [Tweet tweetsWithArray:tweetDictionaries];
-
-        //NSLog(@"%@", tweetDictionaries[0]);
+        NSLog(@"%@", tweetDictionaries);
            completion(tweets, nil);
        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
            // There was a problem
@@ -126,52 +124,113 @@ static NSString * const baseURLString = @"https://api.twitter.com";
 }
 
 
-- (void) getTweetConversationID:(Tweet *)tweet completion:(void (^)(NSString *, NSError *))completion {
-    NSString *urlString = @"2/tweets";
-    NSDictionary *parameters = @{@"ids": @"1410264579024822279", @"tweet.fields": @"conversation_id"};
-    [self GET:urlString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable tweetDictionary) {
-            completion(tweetDictionary[@"data"][0][@"conversation_id"], nil);
+- (void) postReplyWithText: (NSString *) text replyToUsername: (NSString *) replyToUsername replyID: (NSString *) replyToUserID completion: (void (^) (Tweet *, NSError *)) completion {
+    NSString *urlString = @"1.1/statuses/update.json";
+    NSDictionary *parameters = @{@"status": [NSString stringWithFormat:@"@%@ %@", replyToUsername, text]
+, @"in_reply_to_status_id": replyToUserID};
+    [self POST:urlString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable tweetDictionary) {
+            Tweet *tweet = [[Tweet alloc] initWithDictionary: tweetDictionary];
+            completion(tweet, nil);
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             completion(nil, error);
         }];
-    
 }
 
+//
+//- (void) getTweetConversationID:(Tweet *)tweet completion:(void (^)(NSString *, NSError *))completion {
+//    NSString *urlString = @"2/tweets";
+//    NSDictionary *parameters = @{@"ids": @"1410264579024822279", @"tweet.fields": @"conversation_id"};
+//    [self GET:urlString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable tweetDictionary) {
+//            completion(tweetDictionary[@"data"][0][@"conversation_id"], nil);
+//        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+//            completion(nil, error);
+//        }];
+//
+//}
+
 - (void) getReplies:(Tweet *)tweet completion:(void (^)(NSArray *, NSError *))completion {
-    [self getTweetConversationID:tweet completion:^(NSString *conversationID, NSError *error) {
-        if (error != nil) {
-            NSLog(@"Failed at getTweetConversationID %@", error.localizedDescription);
-            completion(nil, error);
-        } else {
-            [self getRepliesWithID:conversationID completion:^(NSDictionary *dataDict, NSError *error) {
-                if (error != nil) {
-                    NSLog(@"%@",error.localizedDescription);
-                    completion(nil, error);
-                } else {
-                    NSDictionary *users = [[NSDictionary alloc] init];
-                    for (NSDictionary *user in dataDict[@"includes"][@"users"]) {
-                        [users setValue: user forKey: user[@"id"]];
+//    [self getTweetConversationID:tweet completion:^(NSString *conversationID, NSError *error) {
+//        if (error != nil) {
+//            NSLog(@"Failed at getTweetConversationID %@", error.localizedDescription);
+//            completion(nil, error);
+//        } else {
+//            [self getRepliesWithID:conversationID completion:^(NSDictionary *dataDict, NSError *error) {
+//                if (error != nil) {
+//                    completion(nil, error);
+//                } else {
+//                    NSMutableDictionary *users = [[NSMutableDictionary alloc] init];
+//                    NSMutableArray *replies = [[NSMutableArray alloc] init];
+//                    for (NSDictionary *user in dataDict[@"includes"][@"users"]) {
+//                        [users setObject: [[NSMutableDictionary alloc] init] forKey: user[@"id"]];
+//                        [[users objectForKey: user[@"id"]] setObject:user forKey: @"user_info"];
+//                    }
+//
+//
+//                    for (NSDictionary *reply in dataDict[@"data"]) {
+//                        NSMutableDictionary *replyWithUser = [[NSMutableDictionary alloc] init];
+//                        [replyWithUser setObject:reply forKey:@"reply"];
+//                        [replyWithUser setObject: users[reply[@"author_id"]] forKey:@"user"];
+//                        [replies addObject:replyWithUser];
+//                    }
+//                        completion(replies, nil);
+//                }
+//
+//            }];
+//        }
+//    }];
+    [self getRepliesWithID: @"1410264579024822279" completion:^(NSDictionary *dataDict, NSError *error) {
+                    if (error != nil) {
+                        completion(nil, error);
+                    } else {
+    
+                        NSMutableDictionary *users = [[NSMutableDictionary alloc] init];
+                        NSMutableArray *replies = [[NSMutableArray alloc] init];
+                        for (NSDictionary *user in dataDict[@"includes"][@"users"]) {
+                            [users setObject: [[NSMutableDictionary alloc] init] forKey: user[@"id"]];
+                            [[users objectForKey: user[@"id"]] setObject:user forKey: @"user_info"];
+                        }
+    
+    
+                        for (NSDictionary *reply in dataDict[@"data"]) {
+                            NSMutableDictionary *replyWithUser = [[NSMutableDictionary alloc] init];
+                            [replyWithUser setObject:reply forKey:@"reply"];
+                            [replyWithUser setObject: users[reply[@"author_id"]] forKey:@"user"];
+                            [replies addObject:replyWithUser];
+                        }
+                            completion(replies, nil);
                     }
-                    for (NSDictionary *reply in dataDict[@"data"]) {
-                        NSDictionary *userInfo = reply[@"author_id"];
-                        
-                    }
-                    completion(dataDict[@"data"], error);
-                }
-            }];
-        }
-    }];
+    
+                }];
+    
     
 }
 
 - (void) getRepliesWithID: (NSString *) tweetID completion:(void (^)(NSDictionary *dataDict, NSError *))completion {
     NSString *urlString = @"2/tweets/search/recent";
-    NSDictionary *parameters = @{@"query":[NSString stringWithFormat:@"conversation_id:%@", tweetID], @"tweet.fields": @"in_reply_to_user_id,author_id,created_at,conversation_id", @"expansions":@"author_id", @"user.fields": @"name,username,created_at,profile_image_url"};
+    NSDictionary *parameters = @{@"query":[NSString stringWithFormat:@"conversation_id:%@", tweetID], @"tweet.fields": @"in_reply_to_user_id,author_id,created_at,conversation_id,public_metrics", @"expansions":@"author_id,referenced_tweets.id", @"user.fields": @"name,username,created_at,profile_image_url"};
     NSLog(@"%@", parameters);
     [self GET:urlString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable tweetDictionary) {
         NSLog(@"%@", tweetDictionary);
-        completion(tweetDictionary, nil);
+        
+        if (tweetDictionary[@"meta"][@"result_count"] == 0) completion([[NSMutableDictionary alloc] init],nil);
+        else completion(tweetDictionary, nil);
+        
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            
+            completion(nil, error);
+        }];
+}
+
+- (void) getProfile: (void (^) (User *, NSError *)) completion {
+    NSString *urlString = @"1.1/account/verify_credentials.json";
+    
+    [self GET:urlString parameters: nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable userDictionary) {
+        NSLog(@"%@", userDictionary);
+        
+        completion([[User alloc] initWithDictionary: userDictionary], nil);
+        
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            
             completion(nil, error);
         }];
 }

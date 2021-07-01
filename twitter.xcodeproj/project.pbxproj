@@ -19,6 +19,8 @@
 		6AD2790920BCC04D0085BC29 /* TimelineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD2790820BCC04D0085BC29 /* TimelineViewController.m */; };
 		E553CB25268BBA1000E055F1 /* ComposeTweetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E553CB24268BBA1000E055F1 /* ComposeTweetViewController.m */; };
 		E57AFD91268D1A8A0076A10B /* TweetReplyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E57AFD90268D1A8A0076A10B /* TweetReplyCell.m */; };
+		E57AFD97268D5D6F0076A10B /* ReplyTweet.m in Sources */ = {isa = PBXBuildFile; fileRef = E57AFD96268D5D6F0076A10B /* ReplyTweet.m */; };
+		E57AFD9A268D8CB00076A10B /* TweetDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E57AFD99268D8CB00076A10B /* TweetDetailsViewController.m */; };
 		E57F3937268A7364005A3F1B /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = E57F3936268A7364005A3F1B /* User.m */; };
 		E57F393A268A749F005A3F1B /* Tweet.m in Sources */ = {isa = PBXBuildFile; fileRef = E57F3939268A749F005A3F1B /* Tweet.m */; };
 		E57F393C268A7FE0005A3F1B /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = E57F393B268A7FE0005A3F1B /* Keys.plist */; };
@@ -49,6 +51,10 @@
 		E553CB24268BBA1000E055F1 /* ComposeTweetViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ComposeTweetViewController.m; sourceTree = "<group>"; };
 		E57AFD8F268D1A8A0076A10B /* TweetReplyCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TweetReplyCell.h; sourceTree = "<group>"; };
 		E57AFD90268D1A8A0076A10B /* TweetReplyCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TweetReplyCell.m; sourceTree = "<group>"; };
+		E57AFD95268D5D6F0076A10B /* ReplyTweet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReplyTweet.h; sourceTree = "<group>"; };
+		E57AFD96268D5D6F0076A10B /* ReplyTweet.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReplyTweet.m; sourceTree = "<group>"; };
+		E57AFD98268D8CB00076A10B /* TweetDetailsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TweetDetailsViewController.h; sourceTree = "<group>"; };
+		E57AFD99268D8CB00076A10B /* TweetDetailsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TweetDetailsViewController.m; sourceTree = "<group>"; };
 		E57F3935268A7364005A3F1B /* User.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
 		E57F3936268A7364005A3F1B /* User.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		E57F3938268A749F005A3F1B /* Tweet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Tweet.h; sourceTree = "<group>"; };
@@ -133,6 +139,8 @@
 				E57F3936268A7364005A3F1B /* User.m */,
 				E57F3938268A749F005A3F1B /* Tweet.h */,
 				E57F3939268A749F005A3F1B /* Tweet.m */,
+				E57AFD95268D5D6F0076A10B /* ReplyTweet.h */,
+				E57AFD96268D5D6F0076A10B /* ReplyTweet.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -157,6 +165,8 @@
 				6AD2790820BCC04D0085BC29 /* TimelineViewController.m */,
 				E553CB23268BBA1000E055F1 /* ComposeTweetViewController.h */,
 				E553CB24268BBA1000E055F1 /* ComposeTweetViewController.m */,
+				E57AFD98268D8CB00076A10B /* TweetDetailsViewController.h */,
+				E57AFD99268D8CB00076A10B /* TweetDetailsViewController.m */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -281,9 +291,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E57AFD97268D5D6F0076A10B /* ReplyTweet.m in Sources */,
 				E57F393F268A8759005A3F1B /* TweetCell.m in Sources */,
 				E57AFD91268D1A8A0076A10B /* TweetReplyCell.m in Sources */,
 				6AD278F320BCA6020085BC29 /* BDBOAuth1SessionManager+SFAuthenticationSession.m in Sources */,
+				E57AFD9A268D8CB00076A10B /* TweetDetailsViewController.m in Sources */,
 				E57F3937268A7364005A3F1B /* User.m in Sources */,
 				E553CB25268BBA1000E055F1 /* ComposeTweetViewController.m in Sources */,
 				6AD278E820BC4B970085BC29 /* main.m in Sources */,
