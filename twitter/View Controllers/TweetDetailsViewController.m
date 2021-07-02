@@ -13,6 +13,7 @@
 #import "Tweet.h"
 #import "User.h"
 #import "TimelineViewController.h"
+#import "ComposeTweetViewController.h"
 
 @interface TweetDetailsViewController () <UITableViewDelegate, UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tweetsTableView;
@@ -60,5 +61,16 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 2;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    UINavigationController *navigationController = [segue destinationViewController];
+    ComposeTweetViewController *CTVC = (ComposeTweetViewController *) navigationController.topViewController;
+    NSIndexPath *indexPath = [self.tweetsTableView indexPathForCell: [[sender superview] superview]];
+    NSLog(@"%@", self.replies[indexPath.row]);
+    Tweet *tweet = [[Tweet alloc] initWithReplyDictionary: self.replies[indexPath.row] ];
+    CTVC.replyID = tweet.idStr;
+    CTVC.replyUsername = tweet.user.screenName;
+    CTVC.tweetType = @"reply";
 }
 @end

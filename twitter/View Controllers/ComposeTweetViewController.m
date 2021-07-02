@@ -73,7 +73,7 @@
                             [self dismissViewControllerAnimated:true completion:nil];
                         }
             }];
-        } else if ([self.tweetType isEqualToString: @"reply"]) {
+        } else {
             [[APIManager shared] postReplyWithText: self.tweetTextView.text replyToUsername: self.replyUsername replyID: self.replyID completion:^(Tweet *tweet, NSError *error) {
                             if (error != nil) {
                                 NSLog(@"%@", error.localizedDescription);
