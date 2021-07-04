@@ -52,7 +52,7 @@ Please list two areas of the assignment you'd like to **discuss further with you
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
-
+![](https://i.imgur.com/yAYCmmF.gif)
 ![](Twitter1.gif)
 ![](Twitter2.gif)
 ![](Twitter3.gif)
